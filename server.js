@@ -1,28 +1,12 @@
-const express = require('express');
-const sqlite3 = require('sqlite3');
-const { open } = require('sqlite');
 
+const express = require('express')
 const app = express();
-const port = 3001;
+const router = require('./Routes.js')
 
-app.get('/api/sales-data', async (req, res) => {
-  try {
-    // Open the SQLite database
-    const db = await open({
-      filename: './sqlite/sales.db',
-      driver: sqlite3.Database,
-    });
+// Use the routes defined in routes.js
+app.use('/', router);
 
-    // Query the database
-    const salesData = await db.all('SELECT * FROM Sales');
-
-    res.json(salesData);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
